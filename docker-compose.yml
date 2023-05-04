@@ -1,0 +1,35 @@
+version: '2.12.2'
+
+services:
+
+  app:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/usr/src/app/
+      - /usr/src/app/node_modules
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=root
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
+
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "vasilij.alexsandrovich@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "o37cRy834mrH"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
