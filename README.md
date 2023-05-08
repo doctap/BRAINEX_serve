@@ -1,3 +1,2 @@
-﻿# recommendation-site
-
-https://some-reviews.onrender.com/
+### insall dependencies - npm i
+### run server - npm run dev
