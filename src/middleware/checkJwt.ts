@@ -1,30 +1,20 @@
-import { expressjwt, GetVerificationKey } from 'express-jwt'
-import jwksRsa from 'jwks-rsa'
-import dotenv from 'dotenv'
+import crypto from 'crypto';
 
-dotenv.config()
+const set = new Set();
 
-const domain = process.env.AUTH0_DOMAIN
-const audience = process.env.AUTH0_AUDIENCE
+export const getToken = (): string => {
+	const uuid = crypto.randomUUID();
 
-export const checkJwt = expressjwt({
-	secret: jwksRsa.expressJwtSecret(
-		{
-		cache: true,
-		// ограничение максимального количества запросов
-		rateLimit: true,
-		// 10 запросов в минуту
-		jwksRequestsPerMinute: 10,
-		// обратите внимание на сигнатуру пути
-		jwksUri: `https://${domain}/.well-known/jwks.json`
-	}
-	) as GetVerificationKey,
-	// аудитория
-	audience,
-	// тот, кто подписал токен
-	issuer: `https://${domain}/`,
-	// алгоритм, использованный для подписания токена
-	algorithms: ['RS256']
-})
+	if (set.has(uuid))
+		return getToken();
 
-//cc0f5da250d9af55fa19a955d94915ca face
+	set.add(uuid);
+
+	return uuid;
+}
+
+export const checkToken = (token: string) => {
+	return set.has(token);
+};
+
+export const removeToken = (token: string) => set.delete(token);
