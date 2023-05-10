@@ -16,7 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 const corsOptions: CorsOptions = {
 	credentials: true,
 	optionsSuccessStatus: 200,
-	origin: ['http://localhost:3000'],
+	// origin: ['http://localhost:3000'],
+	origin: '*',
 	methods: ['GET', 'POST', 'DELETE'],
 }
 
@@ -41,6 +42,8 @@ app.get("/games/:token", async (req: Request<IRequestBase>, res) => {
 
 app.post("/login", async (req: Request<IUserData>, res) => {
 	const body = req.body;
+
+	console.log('first')
 
 	const isValid = users.some(u => u.login === body.login && u.password === body.password);
 
